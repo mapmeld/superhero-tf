@@ -1,0 +1,37 @@
+{
+  "name": "weekly-tf",
+  "version": "1.0.0",
+  "description": "Spawn TensorFlow servers to run tasks",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapmeld/weekly-tf.git"
+  },
+  "keywords": [
+    "tensorflow",
+    "aws"
+  ],
+  "author": "Nick Doiron <ndoiron@mapmeld.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mapmeld/weekly-tf/issues"
+  },
+  "homepage": "https://github.com/mapmeld/weekly-tf#readme",
+  "dependencies": {
+    "aws-cli-js": "^2.0.2",
+    "koa": "^2.0.0-alpha.7",
+    "koa-bodyparser": "^3.2.0",
+    "koa-convert": "^1.2.0",
+    "koa-csrf": "^3.0.4",
+    "koa-generic-session": "^1.11.4",
+    "koa-passport": "^3.0.0-rc.2",
+    "koa-route": "^3.2.0",
+    "passport-facebook": "^2.1.1",
+    "passport-google-auth": "^1.0.1",
+    "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.4"
+  }
+}
