@@ -4,9 +4,43 @@ html
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     title Superhero.TF - TensorFlow for all y'all
-    link(rel='stylesheet', href='/css/bootstrap.css')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/style.css')
   body
     .container
       .row
-        .col-sm-12
-          h1 Derp
+        .col-sm-2
+        //
+          .col-sm-4.center.superhero-icon
+            img(src='/img/superhero.jpg')
+        .col-sm-8
+          .jumbotron
+            h1.center Superhero.TF
+            h2
+              span Ordinary Machines
+              small &nbsp;&nbsp;with
+              .clearfix
+              br
+              .clearfix
+              span.pull-right
+                em Extraordinary
+                span &nbsp;Abilities
+            .clearfix
+
+      .row
+        .col-sm-6
+          h3 These computers can learn
+          p Using a deep learning framework named 'TensorFlow' computers can learn, but they will only learn what they are taught.
+          p They can be taught advanced math and linguistics, artistic tricks and effects, and more.
+        .col-sm-6
+          h3 Command and control in your pocket
+          p Try out the latest in machine-learning research from your smartphone.
+          p TensorFlow is built on the work of many computer scientists and experts. You might not be a scientist on paper, but Superhero.TF can open up cloud computing and GPU servers to everyone.
+          
+      hr
+      small
+        span project by&nbsp;
+        a(href='https://twitter.com/mapmeld') Nick Doiron
+      br
+      br
+      small image CC-BY-SA Aaron Bauer

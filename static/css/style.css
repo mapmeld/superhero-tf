@@ -1,0 +1,27 @@
+body {
+  padding-bottom: 25px;
+}
+
+.superhero-icon img {
+  max-height: 250px;
+}
+
+.jumbotron, .jumbotron small {
+  padding-top: 5px;
+  border-radius: 0 !important;
+  background: #105;
+  color: #db070e;
+}
+
+.jumbotron h1 {
+  text-shadow: 2px 2px #ffe63a;
+}
+
+.jumbotron h2 > span {
+  border-bottom: 1px solid #ffe63a;
+  padding-bottom: 2px;
+}
+
+.center {
+  text-align: center;
+}

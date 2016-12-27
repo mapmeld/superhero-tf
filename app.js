@@ -15,6 +15,8 @@ const compression = require('koa-compress');
 const CSRF = require('koa-csrf').default;
 const kstatic = require('koa-static');
 
+const routes = require('./routes');
+
 var app = new Koa();
 app.use(jade(path.join(__dirname, 'views')));
 
@@ -40,13 +42,11 @@ function authCheck(ctx, next) {
   }
 }
 
-router.get('/', home);
-
-function home (ctx) {
-  ctx.render('home');
-}
+router.get('/', routes.home);
 
 app.use(router.routes())
   .use(router.allowedMethods());
+
 app.listen(process.env.PORT || 8080);
+
 module.exports = app;
