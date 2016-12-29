@@ -1,0 +1,71 @@
+img.original {
+  margin-bottom: -15px;
+}
+
+img.original, canvas, img.target {
+  max-width: 100%;
+}
+
+#photobooth {
+  width: 400px;
+  min-height: 300px;
+  background: #ccc;
+  font-size: 14pt;
+  text-align: center;
+  margin-top: 20px;
+}
+
+#photobooth ul {
+  display: none;
+}
+
+canvas#old-regions {
+  opacity: 0.5;
+}
+
+.color-palette, .runner {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.color-palette li {
+  display: inline-block;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.color {
+  font-size: 18pt;
+  padding: 0 10px;
+  cursor: pointer;
+  border: 3px solid transparent;
+}
+
+.color.black {
+  background: #000;
+  color: #000;
+}
+
+.color.red {
+  background: #c00;
+  color: #c00;
+}
+
+.color.blue {
+  background: #00c;
+  color: #00c;
+}
+
+.color.green {
+  background: #0c0;
+  color: #0c0;
+}
+
+.color.purple {
+  background: #c0c;
+  color: #c0c;
+}
+
+.color.highlight {
+  border: 3px solid pink;
+}

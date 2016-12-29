@@ -8,14 +8,13 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const convert = require('koa-convert');
 const session = require('koa-generic-session');
+const MongoStore = require('koa-generic-session-mongo');
 const jade = require('koa-jade-render');
 const logger = require('koa-logger');
 const router = require('koa-router')();
 const compression = require('koa-compress');
 const CSRF = require('koa-csrf').default;
 const kstatic = require('koa-static');
-
-const routes = require('./routes');
 
 var app = new Koa();
 app.use(jade(path.join(__dirname, 'views')));
@@ -33,16 +32,20 @@ app.use(new CSRF({
   invalidTokenStatusCode: 403
 }));
 
-// user authentication check
-function authCheck(ctx, next) {
-  if (ctx.isAuthenticated()) {
-    return next();
-  } else {
-    ctx.redirect('/login');
-  }
-}
+// MongoDB connector
+const mongoose = require('mongoose');
+console.log('connecting to MongoDB...');
+mongoose.connect(process.env.MONGODB_URI || 'localhost');
+app.keys = [process.env.KEY1 || 'your-session-secret', process.env.KEY2 || 'another-session-secret'];
+app.use(convert(session({
+  store: new MongoStore()
+})));
 
-router.get('/', routes.home);
+const routes = require('./routes');
+const login = require('./login');
+router.get('/', routes.home)
+  .get('/experiments', routes.experiments)
+  .get('/experiments/:experiment', routes.experiment);
 
 app.use(router.routes())
   .use(router.allowedMethods());
