@@ -49,7 +49,16 @@ $(function() {
   // if everything goes well, user clicks this to start
   $('button.run').click(composeAndSubmitForm);
   
+  var submitting = false;
   function composeAndSubmitForm() {
+    if (submitting) {
+      return;
+    }
+    submitting = true;
+    setTimeout(function() {
+      submitting = false;
+    }, 4000);
+    
     var originalImage = $('img.original').attr('src');
     var origImg = new Image();
     origImg.onload = function() {
