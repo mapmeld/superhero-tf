@@ -13,7 +13,7 @@ html
         .col-sm-12
           h3 Image Analogies
           p The Image Analogies project by @awentzonline allows you to change the shape or swap parts of images.
-          p In this test of the Superhero.TF platform, you can blend your face with a skull image.
+          p In this test of the Superhero.TF platform, you can blend your face with a monster image.
 
       .row
         .col-sm-8
@@ -29,7 +29,7 @@ html
         .col-sm-4
           h4 Target Face
           strong This is what you're being blended with!
-          img.target(src='/img/sugarskull-Ap.jpg')
+          img.target(src='/img/monster-Ap.jpg')
         
       .row
         .col-sm-12.runner
@@ -38,7 +38,7 @@ html
           hr
           
           form.hide(action='/spawn', enctype='multipart/form-data', method='POST')
-            input(type='hidden', name='experiment', value='skull')
+            input(type='hidden', name='experiment', value='monster')
             input(type='hidden', name='original')
       
       .row

@@ -19,7 +19,7 @@ img.original, canvas, img.target {
   display: none;
 }
 
-canvas#old-regions {
+canvas#old-mask {
   opacity: 0.5;
 }
 

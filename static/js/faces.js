@@ -108,7 +108,7 @@ $(function() {
     $('#photobooth').off().text('').photobooth().click(function() {
       var camctx = $("#photobooth canvas")[0].toDataURL();
       $('img.original').attr('src', camctx);
-      $('#photobooth').text('Click for new photo').click(toggleCamera);
+      $('#photobooth').off().text('Click for new photo').click(toggleCamera);
     });
   }
   $('#photobooth').click(toggleCamera);
