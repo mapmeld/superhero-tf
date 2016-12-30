@@ -32,7 +32,7 @@
         if (!worker) {
             if (typeof window.Worker != "undefined") {
                 try {
-                    worker = new window.Worker(workerControlPath + "pixastic.worker.control.js");
+                    worker = new window.Worker("/js/lib/pixastic.worker.control.js");
                 } catch(e) {
                     if (location.protocol == "file:") {
                         Pixastic.log("Could not create native worker, running from file://")

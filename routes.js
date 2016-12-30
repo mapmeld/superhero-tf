@@ -1,5 +1,5 @@
 
-var experiments = ['skull', 'monster', 'analogy'];
+var experiments = ['skull', 'monster', 'analogy', 'anyface'];
 
 module.exports = {
   home: (ctx) => {
