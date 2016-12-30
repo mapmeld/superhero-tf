@@ -2,7 +2,33 @@
 
 let spawn = (() => {
   var _ref = _asyncToGenerator(function* (ctx) {
-    var response = yield spawnServer();
+    var body = ctx.request.body;
+
+    // previously requested exact same images ?
+    var matchingTasks = yield Task.find({
+      image: hasher(body.original),
+      mask: hasher(body.mask),
+      newmask: hasher(body.newmash)
+    });
+    if (matchingTasks.length) {
+      return ctx.redirect('/result/' + matchingTasks[0]._id);
+    }
+
+    var t = new Task({
+      image: hasher(body.original),
+      mask: hasher(body.mask),
+      newmask: hasher(body.newmash),
+      started: new Date(),
+      user: ctx.user || null
+    });
+    yield t.save();
+
+    var response = yield spawnServer(body);
+    console.log(response);
+
+    // identify server name and IP address
+    // ping {IP address}/status repeatedly outside of this task? or only using user JS?
+
     return ctx.json = response;
   });
 
@@ -20,7 +46,10 @@ const awsCli = require('aws-cli-js');
 const Options = awsCli.Options;
 const Aws = awsCli.Aws;
 
-function spawnServer(callback) {
+const hasher = require('string-hash');
+const Task = require('./models/task');
+
+function spawnServer(postbody, callback) {
   // aws ec2 run-instances --image-id ami-xxxxxxxx --count 1 --instance-type t1.micro --key-name MyKeyPair --security-groups my-sg
 
   var cmdOptions = new Options(process.env.ACCESSKEY, process.env.SECRETKEY, null);
@@ -32,8 +61,7 @@ function spawnServer(callback) {
   */
 
   aws.command('ec2 run-instances --region us-east-1 --image-id ami-6867717f --count 1 --instance-type g2.2xlarge --key-name nuveau --security-groups "Deep Learning AMI-1-5-AutogenByAWSMP-1"').then(data => {
-    console.log(data);
-    return data;
+    callback(data);
   });
 }
 

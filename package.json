@@ -40,6 +40,7 @@
     "passport-facebook": "^2.1.1",
     "passport-google-auth": "^1.0.1",
     "passport-local": "^1.0.0",
-    "passport-twitter": "^1.0.4"
+    "passport-twitter": "^1.0.4",
+    "string-hash": "^1.1.1"
   }
 }

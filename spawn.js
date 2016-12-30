@@ -5,8 +5,32 @@ const awsCli = require('aws-cli-js');
 const Options = awsCli.Options;
 const Aws = awsCli.Aws;
 
+const hasher = require('string-hash');
+const Task = require('./models/task');
+
 async function spawn(ctx) {
-  var response = await spawnServer();
+  var body = ctx.request.body;
+  
+  // previously requested exact same images ?
+  var matchingTasks = await Task.find({
+    image: hasher(body.original),
+    mask: hasher(body.mask),
+    newmask: hasher(body.newmash)
+  });
+  if (matchingTasks.length) {
+    return ctx.redirect('/result/' + matchingTasks[0]._id);
+  }
+  
+  var t = new Task({
+    image: hasher(body.original),
+    mask: hasher(body.mask),
+    newmask: hasher(body.newmash),
+    started: new Date(),
+    user: ctx.user || null
+  });
+  await t.save();
+
+  var response = await spawnServer(body);
   console.log(response);
   
   // identify server name and IP address
@@ -15,7 +39,7 @@ async function spawn(ctx) {
   return ctx.json = response;
 }
 
-function spawnServer(callback) {
+function spawnServer(postbody, callback) {
   // aws ec2 run-instances --image-id ami-xxxxxxxx --count 1 --instance-type t1.micro --key-name MyKeyPair --security-groups my-sg
   
   var cmdOptions = new Options(process.env.ACCESSKEY, process.env.SECRETKEY, null);
