@@ -10,7 +10,9 @@ module.exports = {
   },
   experiment: (ctx) => {
     if (experiments.indexOf(ctx.params.experiment) > -1) {
-      ctx.render(ctx.params.experiment);
+      ctx.render(ctx.params.experiment, {
+        csrfToken: ctx.csrf
+      });
     } else {
       ctx.json = { error: 'error' };
     }

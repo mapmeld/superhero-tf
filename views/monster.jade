@@ -38,6 +38,7 @@ html
           hr
           
           form.hide(action='/spawn', enctype='multipart/form-data', method='POST')
+            input(type='hidden', name='_csrf', value=csrfToken)
             input(type='hidden', name='experiment', value='monster')
             input(type='hidden', name='original')
       

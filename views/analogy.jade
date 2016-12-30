@@ -58,6 +58,7 @@ html
           hr
           
           form.hide(action='/spawn', enctype='multipart/form-data', method='POST')
+            input(type='hidden', name='_csrf', value=csrfToken)
             input(type='hidden', name='original')
             input(type='hidden', name='mask')
             input(type='hidden', name='new-mask')
@@ -66,7 +67,7 @@ html
         .col-sm-12
           br
           br
-          p Weekly.TF is an experiment in making deep learning more widely available. It's a very expensive experiment for me to try running on my own!  Please get in touch about sponsorship, re-hosting, or donating to keep this service free for .edu email addresses.
+          p Superhero.TF is an experiment in making deep learning more widely available. It's a very expensive experiment for me to try running on my own!  Please get in touch about sponsorship, re-hosting, or donating to keep this service free for .edu email addresses.
     
     script(src='https://code.jquery.com/jquery-3.1.1.min.js', integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=', crossorigin='anonymous')
     script(src='/js/analogy.js')
