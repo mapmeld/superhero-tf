@@ -6,23 +6,6 @@ $(function() {
     var uploadImg = new Image();
     uploadImg.onload = function() {
       $('img.original').attr('src', url);
-      $('canvas').attr({
-        height: uploadImg.height,
-        width: uploadImg.width
-      });
-      $('#old-mask').css({
-        marginTop: (-1 * $('img.original').height()) + 'px'
-      });
-      
-      origSize = uploadImg.height;
-      var newWidth = Math.round(8 * origSize / $('img.original').height());
-      var ctx1 = $('#old-mask')[0].getContext('2d');
-      var ctx2 = $('#new-mask')[0].getContext('2d');
-      ctx1.strokeStyle = 'red';
-      ctx1.lineWidth = newWidth;
-      ctx2.strokeStyle = 'red';
-      ctx2.lineWidth = newWidth;
-      $('.color.red').addClass('highlight');
       
       if (callback && typeof callback === 'function') {
         callback();

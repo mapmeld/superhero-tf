@@ -1,29 +1,10 @@
 $(function() {
-  var origSize;
-
   // input of the original image
   function setOriginalImage(url, callback) {
     var uploadImg = new Image();
     uploadImg.onload = function() {
       $('img.original').attr('src', url);
-      $('canvas').attr({
-        height: uploadImg.height,
-        width: uploadImg.width
-      });
-      $('#old-mask').css({
-        marginTop: (-1 * $('img.original').height()) + 'px'
-      });
-      
-      origSize = uploadImg.height;
-      var newWidth = Math.round(8 * origSize / $('img.original').height());
-      var ctx1 = $('#old-mask')[0].getContext('2d');
-      var ctx2 = $('#new-mask')[0].getContext('2d');
-      ctx1.strokeStyle = 'red';
-      ctx1.lineWidth = newWidth;
-      ctx2.strokeStyle = 'red';
-      ctx2.lineWidth = newWidth;
-      $('.color.red').addClass('highlight');
-      
+            
       if (callback && typeof callback === 'function') {
         callback();
       }
@@ -36,6 +17,16 @@ $(function() {
     var image = this.files[0];
     if (image) {
       setOriginalImage(URL.createObjectURL(image));
+    }
+  });
+  
+  $('.submit-target[type="file"]').on('change', function() {
+    // grab file directly, without need to upload
+    var image = this.files[0];
+    if (image) {
+      var targetdata = URL.createObjectURL(image);
+      $('img.target').attr('src', targetdata);
+      blurTargetImage();
     }
   });
   
@@ -68,10 +59,12 @@ $(function() {
         var canv = $('<canvas>').attr({
           width: origImg.width,
           height: origImg.height
-        })[0]
+        })[0];
         canv.getContext('2d').drawImage(origImg, 0, 0);
         $('input[name="original"]').val(canv.toDataURL());
       }
+      $('input[name="target"]').val();
+      $('input[name="blurred"]').val($('canvas#blurring').toDataURL());
       
       $('form').submit();
     };
@@ -112,7 +105,7 @@ $(function() {
   }
   watchForDroppedImage();
   
-  // Photobooth too
+  // Photobooth input for original image
   function toggleCamera () {
     $('#photobooth').off().text('').photobooth().click(function() {
       var camctx = $("#photobooth canvas")[0].toDataURL();
@@ -122,20 +115,32 @@ $(function() {
   }
   $('#photobooth').click(toggleCamera);
   
-  function blurTargetImage() {
-    $('#blurring')
-      .attr('width', $('img.target').width())
-      .attr('height', $('img.target').height());
-    
+  function blurTargetImage() {    
     // TODO: save pimg --> change to target image
-    var pctx = $('#blurring')[0].getContext('2d');
-    pctx.drawImage(pimg, 0, 0, $('img.target').width(), $('img.target').height());
-    var Pix = new Pixastic(pctx);
-    Pix.blur({ kernelSize: Math.round($('#blurrer').val() / 3) }).done(function(a) { });
+    var pctx = $('canvas#blurring')[0].getContext('2d');
+    var pimg = new Image();
+    pimg.onload = function() {
+      $('#blurring')
+        .attr('width', pimg.width)
+        .attr('height', pimg.height);
+      pctx.drawImage(pimg, 0, 0);
+      var Pix = new Pixastic(pctx);
+      Pix.blur({ kernelSize: Math.round($('input#blurrer').val() / 1.5) }).done(function(a) { });
+    };
+    pimg.src = $('img.target').attr('src');
   }
-  $('#blurrer').on('change', blurTargetImage);
+  $('input#blurrer').on('change', blurTargetImage);
   
+  // set initial target image and trigger blurring
   var pimg = new Image();
-  pimg.onload = blurTargetImage;
+  pimg.onload = function() {
+    var canv = $('<canvas>').attr({
+      width: pimg.width,
+      height: pimg.height
+    })[0];
+    canv.getContext('2d').drawImage(pimg, 0, 0);
+    $('img.target').attr('src', canv.toDataURL());
+    blurTargetImage();
+  };
   pimg.src = '/img/monster-Ap.jpg';
 });
