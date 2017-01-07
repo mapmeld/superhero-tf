@@ -68,3 +68,7 @@ canvas#old-mask {
 .color.highlight {
   border: 3px solid pink;
 }
+
+textarea {
+  min-height: 300px;
+}

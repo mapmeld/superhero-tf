@@ -1,0 +1,32 @@
+extends ./experiment-layout.jade
+
+block title
+  h3 Shakespeare
+  p
+    span The&nbsp;
+    a(href='http://tflearn.org/') TFLearn project
+    span &nbsp;includes some examples to start working in Natural Language Processing (NLP).
+
+block visibleform
+  .col-sm-8
+    h4 Source text
+    p This is the source text (a Shakespeare play or your own creation) which TensorFlow will analyze and attempt to mimic.
+    .form-group
+      textarea.form-control(placeholder='Loading...')
+
+  .col-sm-4
+    .well
+      h4 TensorFlow parameters
+      .form
+        .form-group
+          input.form-control(name='s1', placeholder='s1')
+
+block hiddenform
+  input(type='hidden', name='_csrf', value=csrfToken)
+  input(type='hidden', name='experiment', value='shakespeare')
+  input(type='hidden', name='source')
+  input(type='hidden', name='s1')
+
+block scripts
+  script(src='/js/lib/jquery-3.1.1.min.js')
+  script(src='/js/shakespeare.js')

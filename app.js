@@ -50,7 +50,8 @@ const spawn = require('./spawn-compiled');
 router.get('/', routes.home)
   .post('/spawn', spawn.spawn)
   .get('/experiments', routes.experiments)
-  .get('/experiments/:experiment', routes.experiment);
+  .get('/experiments/:experiment', routes.experiment)
+  .get('/results/:id', routes.result);
 
 app.use(router.routes())
   .use(router.allowedMethods());

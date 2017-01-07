@@ -4,36 +4,96 @@ let spawn = (() => {
   var _ref = _asyncToGenerator(function* (ctx) {
     var body = ctx.request.body;
 
-    // previously requested exact same images ?
-    var matchingTasks = yield Task.find({
-      image: hasher(body.original),
-      mask: hasher(body.mask),
-      newmask: hasher(body.newmash)
-    });
-    if (matchingTasks.length) {
-      return ctx.redirect('/result/' + matchingTasks[0]._id);
+    // previously requested exact same images
+    var matchingTasks = null;
+    if (body.original) {
+      matchingTasks = yield Task.findOne({
+        image: hasher(body.original),
+        mask: hasher(body.mask),
+        newmask: hasher(body.newmash),
+        experiment: body.experiment
+      });
+    } else if (body.source) {
+      matchingTasks = yield Task.findOne({
+        image: hasher(body.source),
+        experiment: body.experiment
+      });
+    }
+    if (matchingTasks) {
+      return ctx.redirect('/results/' + matchingTasks[0]._id + '?familiar=true');
     }
 
     var t = new Task({
-      image: hasher(body.original),
-      mask: hasher(body.mask),
-      newmask: hasher(body.newmash),
       started: new Date(),
       user: ctx.user || null
     });
+
+    if (['analogy', 'anyface'].indexOf(body.experiment) > -1) {
+      t.image = hasher(body.original);
+      t.mask = hasher(body.mask);
+      t.newmask = hasher(body.newmash);
+    } else if (['monster', 'skull'].indexOf(body.experiment) > -1) {
+      t.image = hasher(body.original);
+      t.mask = hasher(body.mask);
+      t.newmask = hasher(body.newmash);
+    } else if (['shakespeare'].indexOf(body.experiment) > -1) {
+      t.image = hasher(body.source);
+    } else {
+      return ctx.json = { error: 'unknown experiment' };
+    }
+
+    var hasServer = yield serverWaiting(body);
+    if (hasServer) {
+      // take over this server
+      hasServer.finished = null;
+      hasServer.save(); // await?
+
+      t.server = {
+        ip: hasServer.ip,
+        started: hasServer.started
+      };
+    } else {
+      var response = yield spawnServer(body);
+      console.log(response);
+
+      // identify server name and IP address
+      // ping {IP address}/status repeatedly outside of this task? or only using user JS?
+      t.server = {
+        ip: response.ip || '0.0.0.0',
+        started: new Date()
+      };
+    }
+
     yield t.save();
-
-    var response = yield spawnServer(body);
-    console.log(response);
-
-    // identify server name and IP address
-    // ping {IP address}/status repeatedly outside of this task? or only using user JS?
 
     return ctx.json = response;
   });
 
   return function spawn(_x) {
     return _ref.apply(this, arguments);
+  };
+})();
+
+let serverWaiting = (() => {
+  var _ref2 = _asyncToGenerator(function* (postbody, callback) {
+    // look for instances with the same kind of experiment
+    // must have started and finished in the past half-hour (so experiments can run on it)
+    var halfHour = new Date() - 30 * 60 * 1000;
+    var x = yield Instance.findOne({
+      running: true,
+      experiment: postbody.experiment,
+      started: {
+        $gt: halfHour
+      },
+      finished: {
+        $gt: halfHour
+      }
+    });
+    return x;
+  });
+
+  return function serverWaiting(_x2, _x3) {
+    return _ref2.apply(this, arguments);
   };
 })();
 
@@ -48,6 +108,7 @@ const Aws = awsCli.Aws;
 
 const hasher = require('string-hash');
 const Task = require('./models/task');
+const Instance = require('./models/instance');
 
 function spawnServer(postbody, callback) {
   // aws ec2 run-instances --image-id ami-xxxxxxxx --count 1 --instance-type t1.micro --key-name MyKeyPair --security-groups my-sg
@@ -61,7 +122,18 @@ function spawnServer(postbody, callback) {
   */
 
   aws.command('ec2 run-instances --region us-east-1 --image-id ami-6867717f --count 1 --instance-type g2.2xlarge --key-name nuveau --security-groups "Deep Learning AMI-1-5-AutogenByAWSMP-1"').then(data => {
-    callback(data);
+    var x = new Instance({
+      ip: data.ip,
+      started: new Date(),
+      running: true
+    });
+    x.save(function (err) {
+      if (err) {
+        callback(null);
+      } else {
+        callback(x);
+      }
+    });
   });
 }
 

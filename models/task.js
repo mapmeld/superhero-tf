@@ -7,7 +7,13 @@ var taskSchema = mongoose.Schema({
   archive: String,
   started: Date,
   finished: Date,
-  user: String
+  user: String,
+  experiment: String,
+  server: {
+    id: String,
+    ip: String,
+    started: Date
+  }
 });
 
 module.exports = mongoose.model('task', taskSchema);
