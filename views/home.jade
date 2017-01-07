@@ -1,18 +1,15 @@
-doctype html
+doctype
 html
   head
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    title Superhero.TF - TensorFlow for all y'all
+    title Superhero.TF - TensorFlow for all
     link(rel='stylesheet', href='/css/lib/bootstrap.min.css')
     link(rel='stylesheet', href='/css/style.css')
   body
     .container
       .row
         .col-sm-2
-        //
-          .col-sm-4.center.superhero-icon
-            img(src='/img/superhero.jpg')
         .col-sm-8
           .jumbotron
             h1.center Superhero.TF
@@ -26,44 +23,50 @@ html
                 em Extraordinary
                 span &nbsp;Abilities
             .clearfix
-
+            
       .row
         .col-sm-6
           .bubble
             h3 These computers can learn
-            p Using a deep learning system named 'TensorFlow' computers can learn, but they will only learn what they are taught.
-            p Computers can be taught advanced math and linguistics, artistic tricks and effects, and more. The biggest obstacle is only a few people can talk to them.
             p
+              span Using a deep learning system named '
+              a(href='https://en.wikipedia.org/wiki/TensorFlow') TensorFlow
+              span ' computers learn new abilities, but they will only learn what they are taught.
+            p
+              span Computers are making advances in math and linguistics, artistic tricks and effects, and strategy games.
               span The New York Times calls it&nbsp;
               a(href='http://www.nytimes.com/2016/12/14/magazine/the-great-ai-awakening.html') 'The Great AI Awakening'
+            p The biggest obstacle is that only a few of us have access to talk to the machines.
 
         .col-sm-6
           .bubble
             h3 Command and control in your pocket
             p Try out your own photos and experiments now:
-            a.btn.btn-primary(href='/experiments/skull') Skull
-            span &nbsp; &nbsp;
             a.btn.btn-primary(href='/experiments/monster') Monster
             span &nbsp; &nbsp;
             a.btn.btn-primary(href='/experiments/analogy') Landscape
+            span &nbsp; &nbsp;
+            a.btn.btn-primary(href='/experiments/anyface') Any Face
+            span &nbsp; &nbsp;
+            a.btn.btn-primary(href='/experiments/shakespeare') Shakespeare
             br
             br
-            
-            p TensorFlow is built on the work of many computer scientists and experts. Superhero.TF can open up cloud computing, GPU servers, and deep learning to your smartphone.
+            p Superhero is based on TensorFlow, the product of many computer scientists and experts.
 
       .row
         .col-sm-6
           .bubble
-            h3 Madcap computing
-            p Not everything about machine learning has to be so serious. Smartphones started, in a way, with everyone carrying their music on iPods.
-            p Here you can see interesting effects, copying styles from one photo to the other.
-            img(src='/img/faces.jpg')
-            br
-            br
+            h3 Madcap Computing
+            p Not every high-tech program has to be serious. It took the iPod and other MP3 players to usher in smartphones and the app store.
+            p We can gain a lot (and have fun) by bending advanced technology to artistic and eccentric applications.
+            a(href='/experiments/monster')
+              img(src='/img/faces.jpg', alt='Making a persons face look like a zombie using TensorFlow')
+              br
+              small Monster Experiment
 
         .col-sm-6
           .bubble
-            h3 Open to human learning
+            h3 It's about human learning
             p
               span Machine learning experts&nbsp;
               a(href='http://www.commerce.senate.gov/public/index.cfm/2016/11/commerce-announces-first-artificial-intelligence-hearing') told Congress

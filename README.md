@@ -1,15 +1,19 @@
 # superhero-tf
 
-Node server to invite in users and spawn TensorFlow instances for experiments.
+NodeJS server to invite people to deep learning. Spawns TensorFlow instances for custom experiments.
 
-## Prerequisites
+## Setup
 
-Install NodeJS, NPM, and git
+Prerequisites: NodeJS, git, MongoDB
 
 ```
+# MongoDB should be running
+mongod &
+
 git clone https://github.com/mapmeld/superhero-tf.git
 cd superhero-tf
 npm install
+npm start
 ```
 
 Install AWS CLI: http://docs.aws.amazon.com/cli/latest/userguide/installing.html

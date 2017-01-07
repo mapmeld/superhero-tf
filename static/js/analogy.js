@@ -88,8 +88,8 @@ $(function() {
     })
     .on('mousemove', function(e) {
       if (writing && !areas) {
-        var newX = Math.round(e.offsetX * origSize / $('img.original').height());
-        var newY = Math.round(e.offsetY * origSize / $('img.original').height());
+        var newX = Math.round(e.offsetX * origSize / $(colorable).find('canvas').height());
+        var newY = Math.round(e.offsetY * origSize / $(colorable).find('canvas').height());
         if (lastPt) {
           colorctx.lineTo(newX, newY);
           colorctx.stroke();

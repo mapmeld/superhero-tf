@@ -106,6 +106,10 @@ $(function() {
   watchForDroppedImage();
   
   // Photobooth input for original image
+  $('#photobooth').css({
+    height: Math.round(0.75 * $('#photobooth').width())
+  });
+  
   function toggleCamera () {
     $('#photobooth').off().text('').photobooth().click(function() {
       var camctx = $("#photobooth canvas")[0].toDataURL();
@@ -125,7 +129,7 @@ $(function() {
         .attr('height', pimg.height);
       pctx.drawImage(pimg, 0, 0);
       var Pix = new Pixastic(pctx);
-      Pix.blur({ kernelSize: Math.round($('input#blurrer').val() / 1.5) }).done(function(a) { });
+      Pix.blur({ kernelSize: $('input#blurrer').val() }).done(function(a) { });
     };
     pimg.src = $('img.target').attr('src');
   }
@@ -142,5 +146,5 @@ $(function() {
     $('img.target').attr('src', canv.toDataURL());
     blurTargetImage();
   };
-  pimg.src = '/img/monster-Ap.jpg';
+  pimg.src = '/img/sugarskull-Ap.jpg';
 });

@@ -1,0 +1,35 @@
+doctype
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title Order Form: Image Analogies
+    
+    link(rel='stylesheet', href='/css/lib/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/home.css')
+  body
+    .container
+      .row
+        .col-sm-12
+          block title
+      hr
+
+      .row
+        block visibleform
+        
+      .row
+        .col-sm-12.runner
+          hr
+          button.btn.btn-success.btn-lg.run Run &rarr;
+          hr
+          
+          form.hide(action='/spawn', enctype='multipart/form-data', method='POST')
+            block hiddenform
+      
+      .row
+        .col-sm-12
+          br
+          br
+          p Superhero.TF is an experiment in making deep learning more widely available. It's a very expensive experiment for me to try running on my own!  Please get in touch about sponsorship, re-hosting, or donating to keep this service free for .edu email addresses.
+    
+    block scripts

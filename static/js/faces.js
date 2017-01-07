@@ -96,6 +96,10 @@ $(function() {
   watchForDroppedImage();
   
   // Photobooth too
+  $('#photobooth').css({
+    height: Math.round(0.75 * $('#photobooth').width())
+  });
+  
   function toggleCamera () {
     $('#photobooth').off().text('').photobooth().click(function() {
       var camctx = $("#photobooth canvas")[0].toDataURL();

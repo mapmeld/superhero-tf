@@ -1,73 +1,51 @@
-doctype html
-html
-  head
-    meta(charset='utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    title Order Form: Image Analogies
-    
-    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u', crossorigin='anonymous')
-    link(rel='stylesheet', href='/css/home.css')
-  body
-    .container
-      .row
-        .col-sm-12
-          h3 Image Analogies
-          p The Image Analogies project by @awentzonline allows you to change the shape or swap parts of images.
-          p In this test of the Superhero.TF platform, you can rearrange elements of an image.
-          p
-            span You can create a custom request or&nbsp;
-            a.btn.btn-success.test-case(href='#') Test Case A
-            span .
+extends ./experiment-layout.jade
 
-      .row
-        .col-sm-4
-          h4 Original image
-          small Select the original image by uploading a file or dropping it into the browser
-          input.submit-original(type='file')
-          br
-          br
-          br
-          img.original
+block title
+  h3 Image Analogies
+  p The Image Analogies project by @awentzonline allows you to change the shape or swap parts of images.
+  p In this test of the Superhero.TF platform, you can rearrange elements of an image.
+  p
+    span You can create a custom request or&nbsp;
+    a.btn.btn-success.test-case(href='#') Test Case A
+    span .
 
-        .col-sm-4
-          h4 Define regions of the image
-          strong Paint over sections of the image which will be rearranged in the final product.
-          br
-          br
-          br
-          .colorable.well
-            .color-palette
-            img.original
-            canvas#old-mask(width='320' height='462')
+block visibleform
+  .col-sm-4
+    h4 Original image
+    small Select the original image by uploading a file or dropping it into the browser
+    br
+    br
+    input.submit-original(type='file')
+    br
+    br
+    img.original
 
-        .col-sm-4
-          h4 Output regions
-          strong Paint new regions
-          button#copy-masks.btn.btn-default Start from original
-          br
-          br
-          br
-          .colorable.well
-            .color-palette
-            canvas#new-mask(width='320' height='462')
+  .col-sm-4
+    h4 Define regions of the image
+    p Paint over sections of the image which will be rearranged in the final product.
+    br
+    .colorable.well
+      .color-palette
+      img.original
+      canvas#old-mask(width='320' height='462')
+
+  .col-sm-4
+    h4 Output regions
+    strong Paint new regions
+    button#copy-masks.btn.btn-default Start from original
+    br
+    br
+    br
+    .colorable.well
+      .color-palette
+      canvas#new-mask(width='320' height='462')
         
-      .row
-        .col-sm-12.runner
-          hr
-          button.btn.btn-success.btn-lg.run Run &rarr;
-          hr
-          
-          form.hide(action='/spawn', enctype='multipart/form-data', method='POST')
-            input(type='hidden', name='_csrf', value=csrfToken)
-            input(type='hidden', name='original')
-            input(type='hidden', name='mask')
-            input(type='hidden', name='new-mask')
-      
-      .row
-        .col-sm-12
-          br
-          br
-          p Superhero.TF is an experiment in making deep learning more widely available. It's a very expensive experiment for me to try running on my own!  Please get in touch about sponsorship, re-hosting, or donating to keep this service free for .edu email addresses.
-    
-    script(src='https://code.jquery.com/jquery-3.1.1.min.js', integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=', crossorigin='anonymous')
+block hiddenform
+  input(type='hidden', name='_csrf', value=csrfToken)
+  input(type='hidden', name='original')
+  input(type='hidden', name='mask')
+  input(type='hidden', name='new-mask')
+
+block scripts
+    script(src='/js/lib/jquery-3.1.1.min.js')
     script(src='/js/analogy.js')

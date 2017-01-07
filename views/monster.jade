@@ -1,54 +1,34 @@
-doctype html
-html
-  head
-    meta(charset='utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    title Order Form: Image Analogies
-    
-    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u', crossorigin='anonymous')
-    link(rel='stylesheet', href='/css/home.css')
-  body
-    .container
-      .row
-        .col-sm-12
-          h3 Image Analogies
-          p The Image Analogies project by @awentzonline allows you to change the shape or swap parts of images.
-          p In this test of the Superhero.TF platform, you can blend your face with a monster image.
+extends ./experiment-layout.jade
 
-      .row
-        .col-sm-8
-          h4 Original image
-          small Select the original image by uploading a file, dropping it into the browser, or taking a photo!
-          input.submit-original(type='file')
-          br
-          img.original
-          br
-          #photobooth Click for camera
+block title
+  h3 Image Analogies
+  p The Image Analogies project by @awentzonline allows you to change the shape or swap parts of images.
+  p In this test of the Superhero.TF platform, you can blend your face with a monster image.
+
+block visibleform
+  .col-sm-8
+    h4 Original image
+    p Select the original image by uploading a file, dropping it into the browser, or taking a photo!
+    br
+    input.submit-original(type='file')
+    br
+    img.original
+    br
+    #photobooth Click for camera
 
 
-        .col-sm-4
-          h4 Target Face
-          strong This is what you're being blended with!
-          img.target(src='/img/monster-Ap.jpg')
+  .col-sm-4
+    h4 Target Face
+    p This is what you're being blended with!
+    br
+    img.target(src='/img/monster-Ap.jpg')
         
-      .row
-        .col-sm-12.runner
-          hr
-          button.btn.btn-success.btn-lg.run Run &rarr;
-          hr
-          
-          form.hide(action='/spawn', enctype='multipart/form-data', method='POST')
-            input(type='hidden', name='_csrf', value=csrfToken)
-            input(type='hidden', name='experiment', value='monster')
-            input(type='hidden', name='original')
+block hiddenform          
+  input(type='hidden', name='_csrf', value=csrfToken)
+  input(type='hidden', name='experiment', value='monster')
+  input(type='hidden', name='original')
       
-      .row
-        .col-sm-12
-          br
-          br
-          p Superhero.TF is an experiment in making deep learning more widely available. It's a very expensive experiment for me to try running on my own!  Please get in touch about sponsorship, re-hosting, or donating to keep this service free for .edu email addresses.
-    
-    script(src='https://code.jquery.com/jquery-3.1.1.min.js', integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=', crossorigin='anonymous')
-    script(src='/js/lib/photobooth_min.js')
-    
-    script(src='/js/faces.js')
+block scripts
+  script(src='/js/lib/jquery-3.1.1.min.js')
+  script(src='/js/lib/photobooth_min.js')
+  script(src='/js/faces.js')
