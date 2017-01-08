@@ -54,6 +54,11 @@ small.free {
   color: #fff;
 }
 
+img.half {
+  max-width: 50% !important;
+  margin-left: 25%;
+}
+
 @media (max-width: 800px) {
   .jumbotron h2 {
     display: inline-block;

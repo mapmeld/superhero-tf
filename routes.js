@@ -16,5 +16,8 @@ module.exports = {
     } else {
       ctx.json = { error: 'error' };
     }
+  },
+  result: (ctx) => {
+    ctx.render('result');
   }
 };

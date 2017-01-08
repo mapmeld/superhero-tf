@@ -9,4 +9,8 @@ $(function() {
   $('textarea').on('change input', function() {
     $('input[name="source"]').val($('textarea').val());
   });
+  
+  $('button.run').click(function() {
+    $('form').submit();
+  });
 });

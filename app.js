@@ -23,8 +23,6 @@ app.use(convert(kstatic(__dirname + '/static')));
 app.use(bodyParser());
 app.use(compression());
 
-app.use(logger());
-
 // MongoDB connector
 app.keys = [process.env.KEY1 || 'your-session-secret', process.env.KEY2 || 'another-session-secret'];
 
@@ -44,8 +42,10 @@ app.use(convert(session({
   store: new MongoStore()
 })));
 
+// app.use(logger());
+
 const routes = require('./routes');
-const login = require('./login');
+// const login = require('./login');
 const spawn = require('./spawn-compiled');
 router.get('/', routes.home)
   .post('/spawn', spawn.spawn)

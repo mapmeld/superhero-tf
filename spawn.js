@@ -10,25 +10,26 @@ const Task = require('./models/task');
 const Instance = require('./models/instance');
 
 async function spawn(ctx) {
-  var body = ctx.request.body;
+  var body = ctx.request;
+  console.log(body);
   
   // previously requested exact same images
-  var matchingTasks = null;
+  var matchingTask = null;
   if (body.original) {
-    matchingTasks = await Task.findOne({
+    matchingTask = await Task.findOne({
       image: hasher(body.original),
       mask: hasher(body.mask),
       newmask: hasher(body.newmash),
       experiment: body.experiment
     });
   } else if (body.source) {
-    matchingTasks = await Task.findOne({
+    matchingTask = await Task.findOne({
       image: hasher(body.source),
       experiment: body.experiment
     });
   }
-  if (matchingTasks) {
-    return ctx.redirect('/results/' + matchingTasks[0]._id + '?familiar=true');
+  if (matchingTask) {
+    return ctx.redirect('/results/' + matchingTask._id + '?familiar=true');
   }
   
   var t = new Task({
@@ -36,6 +37,7 @@ async function spawn(ctx) {
     user: ctx.user || null
   });
   
+  console.log(body.experiment);
   if (['analogy', 'anyface'].indexOf(body.experiment) > -1) {
     t.image = hasher(body.original);
     t.mask = hasher(body.mask);
@@ -45,7 +47,15 @@ async function spawn(ctx) {
     t.mask = hasher(body.mask);
     t.newmask = hasher(body.newmash);
   } else if (['shakespeare'].indexOf(body.experiment) > -1) {
+    console.log(body.source);
     t.image = hasher(body.source);
+    t.parameters = {
+      maxlen: ((1 * body.maxlen) || 25),
+      redun_step: ((1 * body.redun_step) || 3),
+      batch_size: ((1 * body.batch_size) || 128),
+      temperature: ((1 * body.temperature) || 0.5),
+      learning_rate: ((1 * body.learning_rate) || 0.001)
+    };
   } else {
     return ctx.json = { error: 'unknown experiment' };
   }

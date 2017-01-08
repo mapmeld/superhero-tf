@@ -8,24 +8,42 @@ block title
     span &nbsp;includes some examples to start working in Natural Language Processing (NLP).
 
 block visibleform
-  .col-sm-8
+  .col-sm-7
     h4 Source text
     p This is the source text (a Shakespeare play or your own creation) which TensorFlow will analyze and attempt to mimic.
     .form-group
       textarea.form-control(placeholder='Loading...')
 
-  .col-sm-4
+  .col-sm-5
     .well
-      h4 TensorFlow parameters
+      h4 Mysterious TensorFlow parameters
+      p You can raise and lower the value of these numbers to change the output, but don't change them TOO much (like 5x).
       .form
         .form-group
-          input.form-control(name='s1', placeholder='s1')
+          label Maximum length of sequence
+          input.form-control(type='number', name='maxlen', placeholder='maxlen (number)', value='25')
+        .form-group
+          label Redundant steps
+          input.form-control(type='number', name='redun_step', placeholder='redun_step (number)', value='3')
+        .form-group
+          label Batch size
+          input.form-control(type='number', name='batch_size', placeholder='batch_size (number)', value='128')
+        .form-group
+          label Temperature
+          input.form-control(name='temperature', placeholder='temperature (number)', value='0.5')
+        .form-group
+          label Learning rate
+          input.form-control(name='learning_rate', placeholder='learning_rate (number)', value='0.001')
 
 block hiddenform
   input(type='hidden', name='_csrf', value=csrfToken)
   input(type='hidden', name='experiment', value='shakespeare')
   input(type='hidden', name='source')
-  input(type='hidden', name='s1')
+  input(type='hidden', name='maxlen')
+  input(type='hidden', name='redun_step')
+  input(type='hidden', name='batch_size')
+  input(type='hidden', name='temperature')
+  input(type='hidden', name='learning_rate')
 
 block scripts
   script(src='/js/lib/jquery-3.1.1.min.js')

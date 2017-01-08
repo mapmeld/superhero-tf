@@ -2,25 +2,26 @@
 
 let spawn = (() => {
   var _ref = _asyncToGenerator(function* (ctx) {
-    var body = ctx.request.body;
+    var body = ctx.request;
+    console.log(ctx.req);
 
     // previously requested exact same images
-    var matchingTasks = null;
+    var matchingTask = null;
     if (body.original) {
-      matchingTasks = yield Task.findOne({
+      matchingTask = yield Task.findOne({
         image: hasher(body.original),
         mask: hasher(body.mask),
         newmask: hasher(body.newmash),
         experiment: body.experiment
       });
     } else if (body.source) {
-      matchingTasks = yield Task.findOne({
+      matchingTask = yield Task.findOne({
         image: hasher(body.source),
         experiment: body.experiment
       });
     }
-    if (matchingTasks) {
-      return ctx.redirect('/results/' + matchingTasks[0]._id + '?familiar=true');
+    if (matchingTask) {
+      return ctx.redirect('/results/' + matchingTask._id + '?familiar=true');
     }
 
     var t = new Task({
@@ -28,6 +29,7 @@ let spawn = (() => {
       user: ctx.user || null
     });
 
+    console.log(body.experiment);
     if (['analogy', 'anyface'].indexOf(body.experiment) > -1) {
       t.image = hasher(body.original);
       t.mask = hasher(body.mask);
@@ -37,7 +39,15 @@ let spawn = (() => {
       t.mask = hasher(body.mask);
       t.newmask = hasher(body.newmash);
     } else if (['shakespeare'].indexOf(body.experiment) > -1) {
+      console.log(body.source);
       t.image = hasher(body.source);
+      t.parameters = {
+        maxlen: 1 * body.maxlen || 25,
+        redun_step: 1 * body.redun_step || 3,
+        batch_size: 1 * body.batch_size || 128,
+        temperature: 1 * body.temperature || 0.5,
+        learning_rate: 1 * body.learning_rate || 0.001
+      };
     } else {
       return ctx.json = { error: 'unknown experiment' };
     }
@@ -121,6 +131,7 @@ function spawnServer(postbody, callback) {
   });
   */
 
+  // TODO: resolve conflict between using a Promise and using async/await
   aws.command('ec2 run-instances --region us-east-1 --image-id ami-6867717f --count 1 --instance-type g2.2xlarge --key-name nuveau --security-groups "Deep Learning AMI-1-5-AutogenByAWSMP-1"').then(data => {
     var x = new Instance({
       ip: data.ip,
