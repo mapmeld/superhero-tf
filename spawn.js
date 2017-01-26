@@ -10,8 +10,7 @@ const Task = require('./models/task');
 const Instance = require('./models/instance');
 
 async function spawn(ctx) {
-  var body = ctx.request;
-  console.log(body);
+  var body = ctx.request.body;
   
   // previously requested exact same images
   var matchingTask = null;
@@ -37,7 +36,6 @@ async function spawn(ctx) {
     user: ctx.user || null
   });
   
-  console.log(body.experiment);
   if (['analogy', 'anyface'].indexOf(body.experiment) > -1) {
     t.image = hasher(body.original);
     t.mask = hasher(body.mask);
@@ -47,7 +45,6 @@ async function spawn(ctx) {
     t.mask = hasher(body.mask);
     t.newmask = hasher(body.newmash);
   } else if (['shakespeare'].indexOf(body.experiment) > -1) {
-    console.log(body.source);
     t.image = hasher(body.source);
     t.parameters = {
       maxlen: ((1 * body.maxlen) || 25),
@@ -63,6 +60,8 @@ async function spawn(ctx) {
   var hasServer = await serverWaiting(body);
   if (hasServer) {
     // take over this server
+    // console.log('resuming server');
+    // console.log(hasServer);
     hasServer.finished = null;
     hasServer.save();  // await?
     
@@ -71,20 +70,21 @@ async function spawn(ctx) {
       started: hasServer.started
     };
   } else {  
-    var response = await spawnServer(body);
-    console.log(response);
+    var newserve = await spawnServer(body);
+    // console.log('setting up new server');
+    // console.log(newserve);
   
     // identify server name and IP address
     // ping {IP address}/status repeatedly outside of this task? or only using user JS?
     t.server = {
-      ip: response.ip || '0.0.0.0',
+      ip: newserve.ip || '0.0.0.0',
       started: new Date()
     };
   }
   
   await t.save();
 
-  return ctx.json = response;
+  ctx.body = t;
 }
 
 async function serverWaiting(postbody, callback) {
@@ -104,32 +104,29 @@ async function serverWaiting(postbody, callback) {
   return x;
 }
 
-function spawnServer(postbody, callback) {
-  // aws ec2 run-instances --image-id ami-xxxxxxxx --count 1 --instance-type t1.micro --key-name MyKeyPair --security-groups my-sg
-  
+async function spawnServer(postbody) {   
   var cmdOptions = new Options(process.env.ACCESSKEY, process.env.SECRETKEY, null);
   var aws = new Aws(cmdOptions);
-  /*
-  aws.command('iam list-users').then((data) => {
-    console.log('data = ', data); 
+  // --image-id ami-6867717f --count 1 --instance-type g2.2xlarge
+  var data = await aws.command('ec2 run-instances --region us-east-1 --image-id ami-8715e591 --count 1 --instance-type t2.nano --key-name animalsound --security-groups "Deep Learning AMI-1-5-AutogenByAWSMP-1"')
+  
+  var x = new Instance({
+    ip: data.ip,
+    started: new Date(),
+    running: true
   });
+  x = await x.save();
+  
+  /*
+  var x = new Instance({
+    ip: '127.0.0.1',
+    started: new Date(),
+    running: true
+  });
+  x = await x.save();
   */
   
-  // TODO: resolve conflict between using a Promise and using async/await
-  aws.command('ec2 run-instances --region us-east-1 --image-id ami-6867717f --count 1 --instance-type g2.2xlarge --key-name nuveau --security-groups "Deep Learning AMI-1-5-AutogenByAWSMP-1"').then((data) => {
-    var x = new Instance({
-      ip: data.ip,
-      started: new Date(),
-      running: true
-    });
-    x.save(function(err) {
-      if (err) {
-        callback(null);
-      } else {
-        callback(x);
-      }
-    });
-  });
+  return x;
 }
 
 module.exports = {

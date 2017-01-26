@@ -1,6 +1,6 @@
 body {
   padding-bottom: 25px;
-  background: linear-gradient(#105, #22a);
+  background: linear-gradient(#090035, #22f);
 }
 
 .superhero-icon img {
@@ -18,7 +18,7 @@ body {
 .jumbotron, .jumbotron small {
   padding-top: 5px;
   border-radius: 0 !important;
-  background: #105;
+  background: #209;
   color: #db070e;
 }
 

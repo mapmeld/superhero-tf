@@ -19,12 +19,12 @@ html
         
       .row
         .col-sm-12.runner
+          hr          
+          .form
+            .experiment-values
+              block hiddenform
+            button.btn.btn-success.btn-lg.run Run &rarr;
           hr
-          button.btn.btn-success.btn-lg.run Run &rarr;
-          hr
-          
-          form.hide(action='/spawn', enctype='multipart/form-data', method='POST')
-            block hiddenform
       
       .row
         .col-sm-12

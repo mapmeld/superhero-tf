@@ -72,3 +72,7 @@ canvas#old-mask {
 textarea {
   min-height: 300px;
 }
+
+form.hide .btn {
+  display: block !important;
+}

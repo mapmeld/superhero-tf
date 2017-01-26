@@ -2,8 +2,7 @@
 
 let spawn = (() => {
   var _ref = _asyncToGenerator(function* (ctx) {
-    var body = ctx.request;
-    console.log(ctx.req);
+    var body = ctx.request.body;
 
     // previously requested exact same images
     var matchingTask = null;
@@ -29,7 +28,6 @@ let spawn = (() => {
       user: ctx.user || null
     });
 
-    console.log(body.experiment);
     if (['analogy', 'anyface'].indexOf(body.experiment) > -1) {
       t.image = hasher(body.original);
       t.mask = hasher(body.mask);
@@ -39,7 +37,6 @@ let spawn = (() => {
       t.mask = hasher(body.mask);
       t.newmask = hasher(body.newmash);
     } else if (['shakespeare'].indexOf(body.experiment) > -1) {
-      console.log(body.source);
       t.image = hasher(body.source);
       t.parameters = {
         maxlen: 1 * body.maxlen || 25,
@@ -55,6 +52,8 @@ let spawn = (() => {
     var hasServer = yield serverWaiting(body);
     if (hasServer) {
       // take over this server
+      // console.log('resuming server');
+      // console.log(hasServer);
       hasServer.finished = null;
       hasServer.save(); // await?
 
@@ -63,20 +62,21 @@ let spawn = (() => {
         started: hasServer.started
       };
     } else {
-      var response = yield spawnServer(body);
-      console.log(response);
+      var newserve = yield spawnServer(body);
+      // console.log('setting up new server');
+      // console.log(newserve);
 
       // identify server name and IP address
       // ping {IP address}/status repeatedly outside of this task? or only using user JS?
       t.server = {
-        ip: response.ip || '0.0.0.0',
+        ip: newserve.ip || '0.0.0.0',
         started: new Date()
       };
     }
 
     yield t.save();
 
-    return ctx.json = response;
+    ctx.body = t;
   });
 
   return function spawn(_x) {
@@ -107,6 +107,37 @@ let serverWaiting = (() => {
   };
 })();
 
+let spawnServer = (() => {
+  var _ref3 = _asyncToGenerator(function* (postbody) {
+    var cmdOptions = new Options(process.env.ACCESSKEY, process.env.SECRETKEY, null);
+    var aws = new Aws(cmdOptions);
+    // --image-id ami-6867717f --count 1 --instance-type g2.2xlarge
+    var data = yield aws.command('ec2 run-instances --region us-east-1 --image-id ami-8715e591 --count 1 --instance-type t2.nano --key-name animalsound --security-groups "Deep Learning AMI-1-5-AutogenByAWSMP-1"');
+
+    var x = new Instance({
+      ip: data.ip,
+      started: new Date(),
+      running: true
+    });
+    x = yield x.save();
+
+    /*
+    var x = new Instance({
+      ip: '127.0.0.1',
+      started: new Date(),
+      running: true
+    });
+    x = await x.save();
+    */
+
+    return x;
+  });
+
+  return function spawnServer(_x4) {
+    return _ref3.apply(this, arguments);
+  };
+})();
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 // spawn.js
@@ -119,34 +150,6 @@ const Aws = awsCli.Aws;
 const hasher = require('string-hash');
 const Task = require('./models/task');
 const Instance = require('./models/instance');
-
-function spawnServer(postbody, callback) {
-  // aws ec2 run-instances --image-id ami-xxxxxxxx --count 1 --instance-type t1.micro --key-name MyKeyPair --security-groups my-sg
-
-  var cmdOptions = new Options(process.env.ACCESSKEY, process.env.SECRETKEY, null);
-  var aws = new Aws(cmdOptions);
-  /*
-  aws.command('iam list-users').then((data) => {
-    console.log('data = ', data); 
-  });
-  */
-
-  // TODO: resolve conflict between using a Promise and using async/await
-  aws.command('ec2 run-instances --region us-east-1 --image-id ami-6867717f --count 1 --instance-type g2.2xlarge --key-name nuveau --security-groups "Deep Learning AMI-1-5-AutogenByAWSMP-1"').then(data => {
-    var x = new Instance({
-      ip: data.ip,
-      started: new Date(),
-      running: true
-    });
-    x.save(function (err) {
-      if (err) {
-        callback(null);
-      } else {
-        callback(x);
-      }
-    });
-  });
-}
 
 module.exports = {
   spawn: spawn

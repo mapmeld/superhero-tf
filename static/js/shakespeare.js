@@ -1,3 +1,9 @@
+if (typeof console === 'undefined') {
+  console = {
+    log: function() { }
+  };
+}
+
 $(function() {
   $.get('/txt/shakespeare.txt', function(data) {
     if (!$('textarea').val().trim().length) {
@@ -11,6 +17,16 @@ $(function() {
   });
   
   $('button.run').click(function() {
-    $('form').submit();
+    var postal = {};
+    var ips = $('.experiment-values input');
+    for (var i = 0; i < ips.length; i++) {
+      postal[$(ips[i]).attr('name')] = $(ips[i]).val();
+    }
+    $.post('/spawn', postal, function(data) {
+      console.log(data);
+      if (data._id) {
+        window.location.href = '/results/' + data._id;
+      }
+    });
   });
 });

@@ -20,7 +20,11 @@ var app = new Koa();
 app.use(jade(path.join(__dirname, 'views')));
 
 app.use(convert(kstatic(__dirname + '/static')));
-app.use(bodyParser());
+app.use(bodyParser({
+  jsonLimit: '1mb',
+  textLimit: '1mb',
+  formLimit: '1mb'
+}));
 app.use(compression());
 
 // MongoDB connector
