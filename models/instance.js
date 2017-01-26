@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 var instanceSchema = mongoose.Schema({
-  ip: String,
+  awsid: String,
   started: Date,
   finished: Date,
   running: Boolean

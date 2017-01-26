@@ -66,7 +66,7 @@ async function spawn(ctx) {
     hasServer.save();  // await?
     
     t.server = {
-      ip: hasServer.ip,
+      awsid: hasServer.awsid,
       started: hasServer.started
     };
   } else {  
@@ -77,7 +77,7 @@ async function spawn(ctx) {
     // identify server name and IP address
     // ping {IP address}/status repeatedly outside of this task? or only using user JS?
     t.server = {
-      ip: newserve.ip || '0.0.0.0',
+      awsid: newserve.awsid,
       started: new Date()
     };
   }
@@ -107,11 +107,21 @@ async function serverWaiting(postbody, callback) {
 async function spawnServer(postbody) {   
   var cmdOptions = new Options(process.env.ACCESSKEY, process.env.SECRETKEY, null);
   var aws = new Aws(cmdOptions);
-  // --image-id ami-6867717f --count 1 --instance-type g2.2xlarge
-  var data = await aws.command('ec2 run-instances --region us-east-1 --image-id ami-8715e591 --count 1 --instance-type t2.nano --key-name animalsound --security-groups "Deep Learning AMI-1-5-AutogenByAWSMP-1"')
+  var data = await aws.command('ec2 run-instances --region us-east-1 --image-id ami-8715e591 --count 1 --instance-type g2.2xlarge --key-name animalsound --security-groups "Deep Learning AMI-1-5-AutogenByAWSMP-1"')
+  
+  /* data.object.Instances[
+    InstanceId
+    LaunchTime
+    Monitoring: { State: 'disabled' }
+    Placement: { AvailabilityZone: 'us-east-1c' }
+    State: { Name: 'pending' }
+  ] */
+  
+  // finding my instance ID on AWS machines
+  // http://stackoverflow.com/questions/625644/find-out-the-instance-id-from-within-an-ec2-machine
   
   var x = new Instance({
-    ip: data.ip,
+    awsid: data.object.Instances[0].InstanceId,
     started: new Date(),
     running: true
   });
@@ -119,7 +129,7 @@ async function spawnServer(postbody) {
   
   /*
   var x = new Instance({
-    ip: '127.0.0.1',
+    awsid: '127.0.0.1',
     started: new Date(),
     running: true
   });

@@ -11,7 +11,7 @@ var taskSchema = mongoose.Schema({
   experiment: String,
   server: {
     id: String,
-    ip: String,
+    awsid: String,
     started: Date
   },
   parameters: Object
