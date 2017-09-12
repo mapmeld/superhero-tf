@@ -1,5 +1,7 @@
 # superhero-tf
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/mapmeld/superhero-tf.svg)](https://greenkeeper.io/)
+
 NodeJS server to invite people to deep learning. Spawns TensorFlow instances for custom experiments.
 
 ## Setup
